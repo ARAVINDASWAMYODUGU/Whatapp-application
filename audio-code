@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Audio Call</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: #111b21;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .call-screen {
+            width: 400px;
+            height: 650px;
+            background: linear-gradient(
+                to bottom,
+                #075e54,
+                #128c7e,
+                #111b21
+            );
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            width: 100%;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .back {
+            cursor: pointer;
+            font-size: 25px;
+            margin-right: 15px;
+        }
+
+        .call-type {
+            font-size: 15px;
+        }
+
+        .profile-section {
+            margin-top: 55px;
+            text-align: center;
+        }
+
+        .profile {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 55px;
+            color: #666;
+            margin: auto;
+            border: 4px solid rgba(255,255,255,0.25);
+        }
+
+        .name {
+            font-size: 25px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .status {
+            font-size: 15px;
+            margin-top: 8px;
+            color: #d7f8f3;
+        }
+
+        .timer {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 35px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .control {
+            width: 55px;
+            height: 55px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .control:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .control.active {
+            background: white;
+            color: #111;
+        }
+
+        .end-call {
+            background: #ea0038;
+            width: 65px;
+            height: 65px;
+            font-size: 25px;
+        }
+
+        .end-call:hover {
+            background: #c90030;
+        }
+
+        .call-message {
+            position: absolute;
+            bottom: 115px;
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        @media (max-width: 500px) {
+            .call-screen {
+                width: 100%;
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="call-screen">
+
+        <div class="top-bar">
+            <div class="back" onclick="goBack()">‹</div>
+            <div class="call-type">WhatsApp Audio Call</div>
+        </div>
+
+        <div class="profile-section">
+
+            <div class="profile">
+                👤
+            </div>
+
+            <div class="name">
+                John
+            </div>
+
+            <div class="status" id="status">
+                Calling...
+            </div>
+
+            <div class="timer" id="timer">
+                00:00
+            </div>
+
+        </div>
+
+        <div class="call-message" id="callMessage">
+            Calling John...
+        </div>
+
+        <div class="controls">
+
+            <button
+                class="control"
+                id="muteButton"
+                onclick="toggleMute()">
+                🎙️
+            </button>
+
+            <button
+                class="control"
+                id="speakerButton"
+                onclick="toggleSpeaker()">
+                🔊
+            </button>
+
+            <button
+                class="control end-call"
+                onclick="endCall()">
+                ☎
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let seconds = 0;
+        let callStarted = false;
+        let timerInterval;
+
+        const timer = document.getElementById("timer");
+        const status = document.getElementById("status");
+        const callMessage = document.getElementById("callMessage");
+
+        function startCall() {
+
+            setTimeout(function() {
+
+                callStarted = true;
+
+                status.innerText = "Connected";
+                callMessage.innerText = "Call in progress";
+
+                timerInterval = setInterval(function() {
+
+                    seconds++;
+
+                    let minutes = Math.floor(seconds / 60);
+                    let remainingSeconds = seconds % 60;
+
+                    minutes = minutes < 10
+                        ? "0" + minutes
+                        : minutes;
+
+                    remainingSeconds = remainingSeconds < 10
+                        ? "0" + remainingSeconds
+                        : remainingSeconds;
+
+                    timer.innerText =
+                        minutes + ":" + remainingSeconds;
+
+                }, 1000);
+
+            }, 2000);
+        }
+
+
+        function toggleMute() {
+
+            const button = document.getElementById("muteButton");
+
+            if (button.classList.contains("active")) {
+
+                button.classList.remove("active");
+                button.innerText = "🎙️";
+                callMessage.innerText = "Microphone on";
+
+            } else {
+
+                button.classList.add("active");
+                button.innerText = "🔇";
+                callMessage.innerText = "Microphone muted";
+
+            }
+        }
+
+
+        function toggleSpeaker() {
+
+            const button = document.getElementById("speakerButton");
+
+            if (button.classList.contains("active")) {
+
+                button.classList.remove("active");
+                button.innerText = "🔊";
+                callMessage.innerText = "Speaker off";
+
+            } else {
+
+                button.classList.add("active");
+                button.innerText = "🔊";
+                callMessage.innerText = "Speaker on";
+
+            }
+        }
+
+
+        function endCall() {
+
+            clearInterval(timerInterval);
+
+            status.innerText = "Call ended";
+            callMessage.innerText = "Call ended";
+
+            document.querySelector(".end-call").style.background =
+                "#555";
+
+            setTimeout(function() {
+
+                alert("Audio call ended");
+
+            }, 300);
+        }
+
+
+        function goBack() {
+
+            alert("Returning to chat...");
+
+        }
+
+
+        startCall();
+
+    </script>
+
+</body>
+</html>
