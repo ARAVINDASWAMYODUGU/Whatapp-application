@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Status</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #d9dbd5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app {
+    width: 400px;
+    height: 700px;
+    background: white;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.header {
+    height: 65px;
+    background: #008069;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+}
+
+.header h2 {
+    font-size: 21px;
+}
+
+.header-icons {
+    display: flex;
+    gap: 20px;
+    font-size: 22px;
+}
+
+.tabs {
+    height: 48px;
+    background: #008069;
+    display: flex;
+    color: white;
+}
+
+.tab {
+    width: 50%;
+    text-align: center;
+    padding-top: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tab.active {
+    border-bottom: 3px solid white;
+}
+
+.content {
+    height: calc(100% - 113px);
+    overflow-y: auto;
+    background: #fff;
+}
+
+.section-title {
+    background: #f0f2f5;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #667781;
+    font-weight: bold;
+}
+
+.status-item {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.status-item:hover {
+    background: #f5f5f5;
+}
+
+.status-image {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    padding: 3px;
+    border: 3px solid #25d366;
+    margin-right: 15px;
+}
+
+.status-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.my-status {
+    border: 3px solid #d9d9d9;
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-info h3 {
+    font-size: 16px;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.status-info p {
+    font-size: 13px;
+    color: #667781;
+}
+
+.add-button {
+    position: absolute;
+    right: 22px;
+    bottom: 75px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: #00a884;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+}
+
+.add-button:hover {
+    background: #008f72;
+}
+
+.status-viewer {
+    position: absolute;
+    inset: 0;
+    background: #111;
+    display: none;
+    z-index: 10;
+    color: white;
+}
+
+.viewer-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: linear-gradient(rgba(0,0,0,0.7), transparent);
+}
+
+.close {
+    font-size: 30px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.viewer-name {
+    font-size: 16px;
+}
+
+.viewer-time {
+    font-size: 12px;
+    color: #ddd;
+    margin-top: 3px;
+}
+
+.viewer-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.viewer-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.create-status {
+    position: absolute;
+    inset: 0;
+    background: white;
+    display: none;
+    z-index: 20;
+}
+
+.create-header {
+    height: 60px;
+    background: #008069;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 20px;
+}
+
+.create-header span {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.create-header h3 {
+    font-size: 18px;
+}
+
+.create-body {
+    padding: 25px;
+}
+
+.create-body input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.create-body button {
+    width: 100%;
+    padding: 14px;
+    background: #00a884;
+    border: none;
+    color: white;
+    border-radius: 7px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@media(max-width: 500px) {
+    .app {
+        width: 100%;
+        height: 100vh;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <h2>WhatsApp</h2>
+
+        <div class="header-icons">
+            <span>⌕</span>
+            <span>⋮</span>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab">CHATS</div>
+        <div class="tab active">STATUS</div>
+    </div>
+
+    <div class="content">
+
+        <div class="section-title">Status</div>
+
+        <div class="status-item" onclick="openMyStatus()">
+
+            <div class="status-image my-status">
+                <img src="https://i.pravatar.cc/100?img=12">
+            </div>
+
+            <div class="status-info">
+                <h3>My status</h3>
+                <p>Tap to add status update</p>
+            </div>
+
+        </div>
+
+        <div class="section-title">
+            Recent updates
+        </div>
+
+        <div class="status-item"
+             onclick="openStatus('John', '5 minutes ago', 'https://picsum.photos/id/1015/500/800')">
+
+            <div class="status-image">
+                <img src="https://i.pravatar.cc/100?img=3">
+            </div>
+
+            <div class="status-info">
+                <h3>John</h3>
+                <p>5 minutes ago</p>
+            </div>
+
+        </div>
+
+        <div class="status-item"
+             onclick="openStatus('Rahul', '15 minutes ago', 'https://picsum.photos/id/1011/500/800')">
+
+            <div class="status-image">
+                <img src="https://i.pravatar.cc/100?img=5">
+            </div>
+
+            <div class="status-info">
+                <h3>Rahul</h3>
+                <p>15 minutes ago</p>
+            </div>
+
+        </div>
+
+        <div class="status-item"
+             onclick="openStatus('Priya', '32 minutes ago', 'https://picsum.photos/id/1027/500/800')">
+
+            <div class="status-image">
+                <img src="https://i.pravatar.cc/100?img=9">
+            </div>
+
+            <div class="status-info">
+                <h3>Priya</h3>
+                <p>32 minutes ago</p>
+            </div>
+
+        </div>
+
+        <div class="section-title">
+            Viewed updates
+        </div>
+
+        <div class="status-item"
+             onclick="openStatus('David', '1 hour ago', 'https://picsum.photos/id/1005/500/800')">
+
+            <div class="status-image" style="border-color:#bdbdbd;">
+                <img src="https://i.pravatar.cc/100?img=11">
+            </div>
+
+            <div class="status-info">
+                <h3>David</h3>
+                <p>1 hour ago</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <button class="add-button" onclick="openCreateStatus()">+</button>
+
+
+    <div class="status-viewer" id="statusViewer">
+
+        <div class="viewer-header">
+
+            <span class="close" onclick="closeStatus()">‹</span>
+
+            <div>
+                <div class="viewer-name" id="viewerName">
+                    John
+                </div>
+
+                <div class="viewer-time" id="viewerTime">
+                    5 minutes ago
+                </div>
+            </div>
+
+        </div>
+
+        <div class="viewer-content">
+            <img id="viewerImage" src="">
+        </div>
+
+    </div>
+
+
+    <div class="create-status" id="createStatus">
+
+        <div class="create-header">
+
+            <span onclick="closeCreateStatus()">‹</span>
+
+            <h3>Create Status</h3>
+
+        </div>
+
+        <div class="create-body">
+
+            <input
+                type="text"
+                id="statusText"
+                placeholder="Write a status..."
+            >
+
+            <input
+                type="file"
+                id="statusFile"
+                accept="image/*"
+            >
+
+            <button onclick="postStatus()">
+                Post Status
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function openStatus(name, time, image) {
+
+    document.getElementById("viewerName").innerText = name;
+
+    document.getElementById("viewerTime").innerText = time;
+
+    document.getElementById("viewerImage").src = image;
+
+    document.getElementById("statusViewer").style.display = "block";
+}
+
+function closeStatus() {
+
+    document.getElementById("statusViewer").style.display = "none";
+}
+
+function openMyStatus() {
+
+    alert("You don't have any status updates yet.");
+}
+
+function openCreateStatus() {
+
+    document.getElementById("createStatus").style.display = "block";
+}
+
+function closeCreateStatus() {
+
+    document.getElementById("createStatus").style.display = "none";
+}
+
+function postStatus() {
+
+    let text = document.getElementById("statusText").value;
+
+    let file = document.getElementById("statusFile").files[0];
+
+    if (text === "" && !file) {
+
+        alert("Please write a status or select an image.");
+
+        return;
+    }
+
+    if (file) {
+
+        let reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            document.getElementById("viewerImage").src = e.target.result;
+
+            document.getElementById("viewerName").innerText = "My status";
+
+            document.getElementById("viewerTime").innerText = "Just now";
+
+            document.getElementById("statusViewer").style.display = "block";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    } else {
+
+        document.getElementById("viewerImage").style.display = "none";
+
+        alert("Status posted: " + text);
+
+    }
+
+    closeCreateStatus();
+}
+
+</script>
+
+</body>
+</html>
